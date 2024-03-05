@@ -15,23 +15,24 @@ datasource db {
 
 // 카테고리 테이블
 model Categories {
-  categoryId Int @id @default(autoincrement()) @map("categoryId")
-  name String @map("name")
-  order Int @map("order")
-  menus Menus[]
+  categoryId  Int @id @default(autoincrement()) 
+  name        String
+  order       Int 
+  menus       Menus[]
 
   @@map("Categories")
 }
+
 // 메뉴 테이블
 model Menus{
-  menuId Int @id @default(autoincrement()) @map("menuId")
-  name String @map("name")
-  description String @db.Text @map("description")
-  image String @map("image")
-  price Int @map("price")
-  order Int @map("order")
-  status Status @default(FOR_SALE) @map("status")
-  categoryId Int @map("categoryId")
+  menuId      Int @id @default(autoincrement()) 
+  name        String 
+  description String @db.Text 
+  image       String 
+  price       Int 
+  order       Int 
+  status      Status @default(FOR_SALE)
+  categoryId  Int
   
   category Categories @relation(fields:[categoryId], references:[categoryId], onDelete: Cascade)
 
@@ -44,12 +45,14 @@ enum Status{
 }
 
 model Users {
-  userId Int @id @default(autoincrement()) @map("user")
-  nickname String @map("nickname")
-  password String @map("password")
-  usertype Usertype @default(CUSTOMER) @map("usertype")
-}
+  userId Int @id @default(autoincrement()) 
+  nickname String 
+  password String 
+  usertype Usertype @default(CUSTOMER) 
 
+  @@map("Users")
+}
+// Users 테이블의 usertype 열을 매핑하기 위한 Enum 정의
 enum Usertype{
   CUSTOMER
   OWNER
