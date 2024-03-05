@@ -1,20 +1,15 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
-import { createCategorySchema } from '../../middlewares/validation/categoryValidation.js';
+import { createCategorySchema } from '../../middlewares/validation/Validation.js';
 import authenticate from '../../middlewares/authenticate.js'; 
+import authorize from '../../middlewares/authorize.js';
 
 const router = express.Router();
 
 // 카테고리 등록
-router.post('/categories',async (req, res, next) => {
+router.post('/categories',authenticate, authorize, async (req, res, next) => {
     try {
         const { name } = await createCategorySchema.validateAsync(req.body);
-
-        // body를 입력받지 못한 경우 400 에러
-        if (!name) {
-            return res.status(400).json({ errorMessage: '데이터 형식이 올바르지 않습니다' });
-        }
-
         // 카테고리 생성
         const category = await prisma.categories.create({
             data: {
@@ -48,7 +43,7 @@ router.patch('/categories/:categoryId', async (req, res, next) => {
         const { name, order } = req.body;
 
         if (!categoryId || !name || !order) {
-            return res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
+            throw new Error('invalidDataFormatError')
         }
 
         const category = await prisma.categories.findFirst({
@@ -56,7 +51,7 @@ router.patch('/categories/:categoryId', async (req, res, next) => {
         });
 
         if (!category) {
-            return res.status(404).json({ message: '존재하지 않는 카테고리입니다.' });
+            throw new Error('noncategoryError');
         }
 
         await prisma.categories.update({
@@ -74,14 +69,14 @@ router.patch('/categories/:categoryId', async (req, res, next) => {
 router.delete('/categories/:categoryId', async (req, res, next) => {
     const { categoryId } = req.params;
     if (!categoryId) {
-        return res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
+        throw new Error('invalidDataFormatError')
     }
 
     const category = await prisma.categories.findFirst({
         where: { categoryId: +categoryId },
     });
     if (!category) {
-        return res.status(404).json({ message: '존재하지 않는 카테고리입니다.' });
+        throw new Error('noncategoryError');
     }
 
     await prisma.categories.delete({ where: { categoryId: +categoryId } });

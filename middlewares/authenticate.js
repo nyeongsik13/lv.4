@@ -5,7 +5,7 @@ const authenticate = (req, res, next) => {
     const formattedToken = token ? token.replace('Bearer ', '') : null;
 
     if (!formattedToken) {
-        return res.status(403).json({ message: "Authentication token is required" });
+        return res.status(401).json({ message: "토큰이 만료되었습니다." });
     }
 
     try {
@@ -13,7 +13,7 @@ const authenticate = (req, res, next) => {
         req.user = decoded; 
         next();
     } catch (error) {
-        return res.status(401).json({ message: "Invalid or expired token" });
+        return res.status(401).json({ message: "토큰이 만료되었습니다." });
     }
 };
 

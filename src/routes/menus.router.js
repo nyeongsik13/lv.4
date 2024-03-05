@@ -1,6 +1,6 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
-import { createMenuSchema } from '../../middlewares/validation/menuValidation.js';
+
 import authenticate from '../../middlewares/authenticate.js'; 
 import authorize from '../../middlewares/authorize.js';
 
@@ -10,18 +10,14 @@ const router = express.Router();
 router.post('/categories/:categoryId/menus', authenticate, authorize, async (req, res, next) => {
     try {
         const { categoryId } = req.params;
-        const { name, description, image, price } = req.body;
-
-        if (price <= 0) {
-            return res.status(400).json({ message: "메뉴 가격은 0보다 작을 수 없습니다." });
-        }
+        const { name, description, image, price } = await createMenuSchema.validateAsync(req.body);
 
         const category = await prisma.categories.findUnique({
             where: { categoryId: +categoryId },
         });
 
         if (!category) {
-            return res.status(404).json({ message: '존재하지 않는 카테고리입니다.' });
+            throw new Error('noncategoryError');
         }
 
         const order = await prisma.menus.count({
@@ -57,11 +53,11 @@ router.get('/categories/:categoryId/menus', async (req, res, next) => {
         where: { categoryId: +categoryId },
     });
     if (!categoryId) {
-        return res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
+        throw new Error('invalidDataFormatError');
     }
 
     if (!category) {
-        return res.status(404).json({ message: '존재하지 않는 카테고리입니다.' });
+        throw new Error('noncategoryError');
     }
     const menus = await prisma.menus.findMany({
         where: { categoryId: +categoryId },
@@ -89,7 +85,7 @@ router.get('/categories/:categoryId/menus/:menuId', async (req, res) => {
         },
     });
     if (!category) {
-        res.status(404).json({ message: '존재하지 않는 카테고리 입니다.' });
+        throw new Error('noncategoryError');
     }
     const menu = await prisma.menus.findUnique({
         where: {
@@ -97,7 +93,7 @@ router.get('/categories/:categoryId/menus/:menuId', async (req, res) => {
         },
     });
     if (!menu) {
-        res.status(404).json({ message: '존재하지 않는 메뉴 입니다.' });
+        throw new Error('nonmenuError')
     }
 
     const categoryMenus = await prisma.menus.findUnique({
@@ -126,7 +122,7 @@ router.patch('/categories/:categoryId/menus/:menuId', authenticate, authorize, a
         });
 
         if (!menuExists) {
-            return res.status(404).json({ message: '존재하지 않는 메뉴입니다.' });
+            throw new Error('nonmenuError')
         }
 
         const updatedMenu = await prisma.menus.update({
@@ -161,7 +157,7 @@ router.delete('/categories/:categoryId/menus/:menuId', authenticate, authorize, 
         });
 
         if (!menuExists) {
-            return res.status(404).json({ message: '존재하지 않는 메뉴입니다.' });
+            throw new Error('nonmenuError')
         }
 
         await prisma.menus.delete({

@@ -7,11 +7,11 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 router.post('/', async(req,res,next)=>{
-    const {nickname, password} = req.body;
+    try{const {nickname, password} = req.body;
     const user = await prisma.users.findFirst({where: {nickname}});
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(400).json({message: '닉네임 또는 패스워드를 확인해주세요.'});
+        throw new Error('loginError')
     }
 
     const token = jwt.sign({
@@ -22,6 +22,9 @@ router.post('/', async(req,res,next)=>{
     return res.cookie('token', token, { httpOnly: true }).status(200).json({
         message: '로그인 성공'
     });
+    }catch(err){
+        next(err);
+}
 });
 
 

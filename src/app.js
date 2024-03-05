@@ -6,7 +6,7 @@ import MenuRouter from './routes/menus.router.js';
 import signupRouter from './routes/sign-up.router.js';
 import signinRouter from './routes/api-sign-in.js';
 import cookieParser from 'cookie-parser';
-
+import Logmiddleware from '../middlewares/log.middleware.js'
 
 
 dotenv.config();
@@ -15,6 +15,7 @@ console.log(process.env.DATABASE_URL);
 const app = express();
 const PORT = 3020;
 
+app.use(Logmiddleware)
 app.use(express.json());
 app.use(cookieParser());
 
