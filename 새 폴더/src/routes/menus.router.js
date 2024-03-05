@@ -17,7 +17,7 @@ router.post('/categories/:categoryId/menus', authenticate, authorize, async (req
         }
 
         const category = await prisma.categories.findUnique({
-            where: { categoryId: +categoryId },
+            where: { id: +categoryId },
         });
 
         if (!category) {
