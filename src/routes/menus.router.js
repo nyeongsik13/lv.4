@@ -1,11 +1,13 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import { createMenuSchema } from '../../middlewares/validation/menuValidation.js';
+import authCustomer from '../../middlewares/authenticateCustomer.js'
+import authOwner from '../../middlewares/authenticateOwner.js'
 
 const router = express.Router();
 
 // 메뉴 등록 API
-router.post('/categories/:categoryId/menus', async (req, res, next) => {
+router.post('/categories/:categoryId/menus',authOwner, async (req, res, next) => {
     try {
         const { categoryId } = req.params;
         const { name, description, image, price } = await createMenuSchema.validateAsync(req.body, {

@@ -1,11 +1,13 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import { createCategorySchema } from '../../middlewares/validation/categoryValidation.js';
+import authCustomer from '../../middlewares/authenticateCustomer.js'
+import authOwner from '../../middlewares/authenticateOwner.js'
 
 const router = express.Router();
 
 // 카테고리 등록
-router.post('/categories', async (req, res, next) => {
+router.post('/categories',async (req, res, next) => {
     try {
         const { name } = await createCategorySchema.validateAsync(req.body);
 

@@ -4,6 +4,10 @@ import categoryRouter from './routes/categories.router.js';
 import MenuRouter from './routes/menus.router.js';
 import ErrorMiddleware from '../middlewares/errormiddleware.js';
 import signupRouter from './routes/sign-up.router.js';
+import UsersRouter from './routes/users.router.js';
+import cookieParser from 'cookie-parser';
+
+
 
 dotenv.config();
 console.log(process.env.DATABASE_URL);
@@ -13,10 +17,14 @@ const PORT = 3020;
 
 app.use(express.json());
 
-app.use('/api/', [categoryRouter, MenuRouter,signupRouter]);
+app.use('/api', [categoryRouter, MenuRouter,signupRouter,UsersRouter]);
 
+app.use(cookieParser());
 
 app.use(ErrorMiddleware);
+
+
+
 
 app.listen(PORT, () => {
     console.log(PORT, '포트로 서버가 열렸어요!');
