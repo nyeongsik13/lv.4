@@ -1,10 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import ErrorMiddleware from '../middlewares/errormiddleware.js';
 import categoryRouter from './routes/categories.router.js';
 import MenuRouter from './routes/menus.router.js';
-import ErrorMiddleware from '../middlewares/errormiddleware.js';
 import signupRouter from './routes/sign-up.router.js';
-import UsersRouter from './routes/users.router.js';
+import signinRouter from './routes/api-sign-in.js';
 import cookieParser from 'cookie-parser';
 
 
@@ -17,8 +17,8 @@ const PORT = 3020;
 
 app.use(express.json());
 
-app.use('/api', [categoryRouter, MenuRouter,signupRouter,UsersRouter]);
-
+app.use('/api', [categoryRouter, MenuRouter,signupRouter]);
+app.use('/api-sign-in', [signinRouter]);
 app.use(cookieParser());
 
 app.use(ErrorMiddleware);

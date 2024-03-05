@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-router.post('/sign-in', async(req,res,next)=>{
+router.post('/', async(req,res,next)=>{
     const {nickname,password} = req.body;
     const user = await prisma.users.findFirst({where: {nickname}})
 

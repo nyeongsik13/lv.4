@@ -1,8 +1,7 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import { createCategorySchema } from '../../middlewares/validation/categoryValidation.js';
-import authCustomer from '../../middlewares/authenticateCustomer.js'
-import authOwner from '../../middlewares/authenticateOwner.js'
+import authenticate from '../../middlewares/authenticate.js'; 
 
 const router = express.Router();
 
