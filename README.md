@@ -59,7 +59,3 @@
     - 로그인 토큰을 검사하여, **사장님(OWNER)** 토큰일 경우에만 메뉴 삭제 가능
   
 ---
-
-### ERD
-![drawSQL-image-export-2024-02-29](https://github.com/friend-0228/lv.3/assets/122089506/6f621f15-352a-4ecd-bf29-3674bb3cf959)
-
