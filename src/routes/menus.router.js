@@ -3,6 +3,7 @@ import { prisma } from '../utils/prisma/index.js';
 
 import authenticate from '../../middlewares/authenticate.js'; 
 import authorize from '../../middlewares/authorize.js';
+import { createMenuSchema } from '../../middlewares/validation/Validation.js';
 
 const router = express.Router();
 

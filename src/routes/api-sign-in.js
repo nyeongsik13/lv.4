@@ -19,7 +19,7 @@ router.post('/', async(req,res,next)=>{
         usertype: user.usertype
     }, process.env.JWT_SECRET || 'Secret Key', { expiresIn: '1d' });
 
-    return res.cookie('token', token, { httpOnly: true }).status(200).json({
+    return res.cookie('token', 'Bearer ${token}', { httpOnly: true }).status(200).json({
         message: '로그인 성공'
     });
     }catch(err){
