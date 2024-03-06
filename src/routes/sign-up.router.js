@@ -3,7 +3,7 @@
 import express from 'express';
 import { prisma } from '../utils/prisma/index.js';
 import argon2 from "argon2";
-import { signUpSchema } from "../../middlewares/validation/Validation.js";
+import { signUpSchema } from "../middlewares/validation/Validation.js";
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.post("/sign-up", async (req, res, next) => {
       where: { nickname },
     });
     if (isExistNickname) {
-      throw new Error("DuplicateUserError");
+      throw new Error("중복된 사용자 닉네임입니다.");
     }
 
     // 비밀번호 암호화
